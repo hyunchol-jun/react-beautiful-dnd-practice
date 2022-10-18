@@ -8,7 +8,31 @@ function App() {
   const [data, setData] = useState(initialData);
 
   const onDragEnd = result => {
-    // TODO: reorder our column
+    const {destination, source, draggableId} = result;
+
+    // If dropped outside droppable, destination will be null
+    // Then, return
+    if (!destination) {
+      return;
+    }
+
+    // If dropped at the same place, return
+    if (destination.droppableId === source.droppableId &&
+        destination.index === source.index) {
+          return;
+    }
+
+    const column = data.columns[source.droppableId];
+    const newTaskIds = Array.from(column.taskIds);
+    newTaskIds.splice(source.index, 1);
+    newTaskIds.splice(destination.index, 0, draggableId);
+
+    const newColumn = {
+      ...column,
+      taskIds: newTaskIds,
+    };
+
+    setData({...data, columns: {...data.columns, [newColumn.id]: newColumn}});
   };
 
   return (
