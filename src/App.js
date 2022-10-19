@@ -1,5 +1,5 @@
 import './App.css';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import initialData from './data/initial-data';
 import {useState} from "react";
 import Column from './components/Column';
@@ -34,7 +34,7 @@ function App() {
 
     setHomeIndex(null);
 
-    const {destination, source, draggableId} = result;
+    const {destination, source, draggableId, type} = result;
 
     // If dropped outside droppable, destination will be null
     // Then, return
@@ -46,6 +46,16 @@ function App() {
     if (destination.droppableId === source.droppableId &&
         destination.index === source.index) {
           return;
+    }
+
+    if (type === "column") {
+      const newColumnOrder = Array.from(data.columnOrder);
+      newColumnOrder.splice(source.index, 1);
+      newColumnOrder.splice(destination.index, 0, draggableId);
+
+      setData({...data, columnOrder: newColumnOrder});
+
+      return;
     }
 
     const start = data.columns[source.droppableId];
@@ -90,23 +100,37 @@ function App() {
       onDragUpdate={onDragUpdate}
       onDragEnd={onDragEnd}
     >
-      <Container>
-        {data.columnOrder.map((columnId, index) => {
-          const column = data.columns[columnId];
-          const tasks = column.taskIds.map(taskId => data.tasks[taskId]);
+      <Droppable
+        droppableId="all-colums" 
+        direction="horizontal" 
+        type="column"
+      >
+        {provided => (
+          <Container 
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            {data.columnOrder.map((columnId, index) => {
+              const column = data.columns[columnId];
+              const tasks = column.taskIds.map(taskId => data.tasks[taskId]);
 
-          const isDropDisabled = index < homeIndex;
-          
-          return (
-            <Column 
-              key={column.id} 
-              column={column} 
-              tasks={tasks} 
-              isDropDisabled={isDropDisabled}
-            />
-          );
-        })}
-      </Container>
+              // Disable drop to the left columns
+              const isDropDisabled = index < homeIndex;
+              
+              return (
+                <Column 
+                  key={column.id} 
+                  column={column} 
+                  tasks={tasks} 
+                  isDropDisabled={isDropDisabled}
+                  index={index}
+                />
+              );
+            })}
+            {provided.placeholder}
+          </Container>
+        )}
+      </Droppable>
     </DragDropContext>
   );
 }

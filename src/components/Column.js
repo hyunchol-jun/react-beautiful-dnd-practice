@@ -1,4 +1,4 @@
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import Task from "./Task";
 
@@ -9,6 +9,7 @@ const Container = styled.div`
     width: 15rem;
     display: flex;
     flex-direction: column;
+    background-color: white;
 `;
 
 const Title = styled.h3`
@@ -18,35 +19,43 @@ const Title = styled.h3`
 const TaskList = styled.div`
     padding: 0.5rem;
     transition: background-color 0.2s ease;
-    background-color: ${props => props.isDraggingOver ? "skyblue" : "white"};
+    background-color: ${props => props.isDraggingOver ? "skyblue" : "inherit"};
     flex-grow: 1;
     min-height: 5rem;
 `;
 
-function Column({column, tasks, isDropDisabled}) {
+function Column({column, tasks, isDropDisabled, index}) {
     return (
-        <Container>
-            <Title>{column.title}</Title>
-            <Droppable 
-                droppableId={column.id}
-                isDropDisabled={isDropDisabled}
-                // items can only be dropped into the same type it started in.
-                // type={column.id === "column-3" ? "done" : "active"}
-            >
-                {(provided, snapshot) => (
-                    <TaskList
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        isDraggingOver={snapshot.isDraggingOver}
+        <Draggable draggableId={column.id} index={index}>
+            {(provided) => (
+                <Container
+                    {...provided.draggableProps} 
+                    ref={provided.innerRef}
+                >
+                    <Title {...provided.dragHandleProps}>{column.title}</Title>
+                    <Droppable 
+                        droppableId={column.id}
+                        isDropDisabled={isDropDisabled}
+                        type="task"
+                        // items can only be dropped into the same type it started in.
+                        // type={column.id === "column-3" ? "done" : "active"}
                     >
-                        {tasks.map((task, index) => (
-                            <Task key={task.id} task={task} index={index} />
-                        ))}
-                        {provided.placeholder}
-                    </TaskList>
-                )}
-            </Droppable>
-        </Container>
+                        {(provided, snapshot) => (
+                            <TaskList
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                isDraggingOver={snapshot.isDraggingOver}
+                            >
+                                {tasks.map((task, index) => (
+                                    <Task key={task.id} task={task} index={index} />
+                                ))}
+                                {provided.placeholder}
+                            </TaskList>
+                        )}
+                    </Droppable>
+                </Container>
+            )}
+        </Draggable>
     );
 }
 
