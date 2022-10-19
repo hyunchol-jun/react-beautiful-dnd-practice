@@ -3,6 +3,11 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import initialData from './data/initial-data';
 import {useState} from "react";
 import Column from './components/Column';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+`;
 
 function App() {
   const [data, setData] = useState(initialData);
@@ -57,12 +62,14 @@ function App() {
       onDragUpdate={onDragUpdate}
       onDragEnd={onDragEnd}
     >
-      {data.columnOrder.map(columnId => {
-        const column = data.columns[columnId];
-        const tasks = column.taskIds.map(taskId => data.tasks[taskId]);
-        
-        return <Column key={column.id} column={column} tasks={tasks} />;
-      })}
+      <Container>
+        {data.columnOrder.map(columnId => {
+          const column = data.columns[columnId];
+          const tasks = column.taskIds.map(taskId => data.tasks[taskId]);
+          
+          return <Column key={column.id} column={column} tasks={tasks} />;
+        })}
+      </Container>
     </DragDropContext>
   );
 }

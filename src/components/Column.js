@@ -6,6 +6,9 @@ const Container = styled.div`
     margin: 0.5rem;
     border: 1px solid lightgrey;
     border-radius: 0.125rem;
+    width: 15rem;
+    display: flex;
+    flex-direction: column;
 `;
 
 const Title = styled.h3`
@@ -16,6 +19,8 @@ const TaskList = styled.div`
     padding: 0.5rem;
     transition: background-color 0.2s ease;
     background-color: ${props => props.isDraggingOver ? "skyblue" : "white"};
+    flex-grow: 1;
+    min-height: 5rem;
 `;
 
 function Column({column, tasks}) {
