@@ -23,11 +23,16 @@ const TaskList = styled.div`
     min-height: 5rem;
 `;
 
-function Column({column, tasks}) {
+function Column({column, tasks, isDropDisabled}) {
     return (
         <Container>
             <Title>{column.title}</Title>
-            <Droppable droppableId={column.id}>
+            <Droppable 
+                droppableId={column.id}
+                isDropDisabled={isDropDisabled}
+                // items can only be dropped into the same type it started in.
+                // type={column.id === "column-3" ? "done" : "active"}
+            >
                 {(provided, snapshot) => (
                     <TaskList
                         ref={provided.innerRef}

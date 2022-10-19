@@ -24,19 +24,20 @@ const Handle = styled.div`
 `;
 
 function Task({task, index}) {
-    const isDragDisabled = task.id === "task-1";
+    // Example of disabling drag and style it
+    // const isDragDisabled = task.id === "task-1";
     return (
         <Draggable 
             draggableId={task.id} 
             index={index}
-            isDragDisabled={isDragDisabled}
+            // isDragDisabled={isDragDisabled}
         >
             {(provided, snapshot) => (
                 <Container
                     {...provided.draggableProps}
                     ref={provided.innerRef}
                     isDragging={snapshot.isDragging}
-                    isDragDisabled={isDragDisabled}
+                    // isDragDisabled={isDragDisabled}
                 >
                     <Handle {...provided.dragHandleProps} />
                     {task.content}
