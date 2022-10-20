@@ -2,7 +2,7 @@ import './App.css';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import initialData from './data/initial-data';
 import {useState} from "react";
-import Column from './components/Column';
+import InnerColumnList from './components/InnerColumnList';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -112,16 +112,15 @@ function App() {
           >
             {data.columnOrder.map((columnId, index) => {
               const column = data.columns[columnId];
-              const tasks = column.taskIds.map(taskId => data.tasks[taskId]);
 
               // Disable drop to the left columns
               const isDropDisabled = index < homeIndex;
               
               return (
-                <Column 
+                <InnerColumnList 
                   key={column.id} 
                   column={column} 
-                  tasks={tasks} 
+                  taskMap={data.tasks} 
                   isDropDisabled={isDropDisabled}
                   index={index}
                 />

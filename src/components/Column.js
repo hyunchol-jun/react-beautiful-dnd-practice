@@ -1,6 +1,7 @@
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import Task from "./Task";
+import InnerList from "./InnerList";
 
 const Container = styled.div`
     margin: 0.5rem;
@@ -19,7 +20,7 @@ const Title = styled.h3`
 const TaskList = styled.div`
     padding: 0.5rem;
     transition: background-color 0.2s ease;
-    background-color: ${props => props.isDraggingOver ? "skyblue" : "inherit"};
+    background-color: ${props => props.isDraggingOver ? "lightgrey" : "inherit"};
     flex-grow: 1;
     min-height: 5rem;
 `;
@@ -46,9 +47,7 @@ function Column({column, tasks, isDropDisabled, index}) {
                                 {...provided.droppableProps}
                                 isDraggingOver={snapshot.isDraggingOver}
                             >
-                                {tasks.map((task, index) => (
-                                    <Task key={task.id} task={task} index={index} />
-                                ))}
+                                <InnerList tasks={tasks} /> 
                                 {provided.placeholder}
                             </TaskList>
                         )}
